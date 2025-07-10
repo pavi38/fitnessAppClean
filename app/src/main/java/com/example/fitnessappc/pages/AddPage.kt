@@ -24,6 +24,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.material.icons.filled.FitnessCenter
 import androidx.compose.material.icons.filled.DirectionsWalk
+import com.example.fitnessappc.pages.AddDialogs.AddWorkOutDialog
 
 data class ActionItem(
     val icon: ImageVector,
@@ -61,11 +62,14 @@ fun AddPage(modifier: Modifier = Modifier) {
 @Composable
 fun ActionCard(item: ActionItem) {
     var showAddFoodDialog by remember { mutableStateOf(false) }
+    var showAddWorkoutDialog by remember { mutableStateOf(false) }
 
     Card(
         onClick = {
             if (item.label == "Log Food") {
                 showAddFoodDialog = true
+            } else if (item.label == "Workout Log") {
+                showAddWorkoutDialog = true
             }
         },
         shape = RoundedCornerShape(12.dp),
@@ -105,5 +109,7 @@ fun ActionCard(item: ActionItem) {
     }
     if(showAddFoodDialog){
         AddFoodDialog(true,onDismiss = { showAddFoodDialog = false })
+    } else if(showAddWorkoutDialog){
+        AddWorkOutDialog(true,onDismiss = { showAddWorkoutDialog = false })
     }
 }

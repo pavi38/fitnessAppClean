@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun CaloriesCard(
+    modifier: Modifier = Modifier,
     baseGoal: Int = 2000,
     food: Int = 0,
     exercise: Int = 0
@@ -52,7 +53,7 @@ fun CaloriesCard(
                     contentAlignment = Alignment.Center,
                     modifier = Modifier.size(140.dp)
                 ) {
-                    PercentageCircle(0.25f)
+                    PercentageCircle(progress = 1 - remaining.toFloat() / baseGoal.toFloat())
                     Canvas(modifier = Modifier.size(140.dp)) {
                         drawCircle(
                             color = Color.LightGray.copy(alpha = 0.2f),

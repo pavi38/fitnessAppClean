@@ -11,12 +11,17 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
 class AuthViewModel : ViewModel() {
+    fun currentUid(): String? = auth.currentUser?.uid
 
     private val auth : FirebaseAuth = FirebaseAuth.getInstance()
     private val firestore = FirebaseFirestore.getInstance()
 
     private val _authState = MutableLiveData<AuthState>()
     val authState: LiveData<AuthState> = _authState
+
+    private val _userProfile = MutableLiveData<UserProfile?>()
+    val userProfile: LiveData<UserProfile?> = _userProfile
+
 
     init {
         checkAuthStatus()
@@ -30,6 +35,10 @@ class AuthViewModel : ViewModel() {
             fetchUserProfile()
         }
     }
+    fun onLoginSuccess(profile: UserProfile) {
+        _userProfile.value = profile
+        _authState.value = AuthState.Authenticated(profile)
+    }
 
     fun login(email : String,password : String){
 
@@ -42,6 +51,7 @@ class AuthViewModel : ViewModel() {
             .addOnCompleteListener{task->
                 if (task.isSuccessful){
                     fetchUserProfile()
+
                 }else{
                     _authState.value = AuthState.Error(task.exception?.message?:"Something went wrong")
                 }
@@ -76,7 +86,7 @@ class AuthViewModel : ViewModel() {
                 .document(currentUserId)
                 .set(userProfile)
                 .addOnSuccessListener {
-                    _authState.value = AuthState.Authenticated(userProfile)
+                    onLoginSuccess(userProfile)
                 }
                 .addOnFailureListener { e ->
                     _authState.value = AuthState.Error(
@@ -101,7 +111,7 @@ class AuthViewModel : ViewModel() {
                     // Map the document into your UserProfile class
                     val userProfile = snapshot.toObject(UserProfile::class.java)
                     if (userProfile != null) {
-                        _authState.value = AuthState.Authenticated(userProfile)
+                        onLoginSuccess(userProfile)
                     } else {
                         _authState.value = AuthState.Error("Failed to parse user profile")
                     }

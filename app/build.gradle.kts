@@ -102,5 +102,6 @@ dependencies {
     implementation("org.json:json:20230227")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.9.1")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.9.1")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-savedstate:2.6.1")
 
 }
